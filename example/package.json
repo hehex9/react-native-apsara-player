@@ -6,11 +6,14 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "postinstall": "rm -rf node_modules/react-native-apsara-player/{example,node_modules}"
   },
   "dependencies": {
+    "@react-native-community/slider": "^2.0.2",
     "react": "16.9.0",
-    "react-native": "0.61.2"
+    "react-native": "0.61.2",
+    "react-native-apsara-player": "file:../"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",

@@ -1,14 +1,15 @@
 #import "ApsaraPlayerView.h"
 
 @interface ApsaraPlayerView ()
-
-@property (nonatomic, strong) NSDictionary *options;
-@property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) UIView *playerView;
-
 @end
 
 @implementation ApsaraPlayerView
+{
+  NSDictionary *_options;
+  BOOL _paused;
+  NSString *_vid;
+}
 
 - (void) layoutSubviews {
   [super layoutSubviews];
@@ -24,47 +25,7 @@
   }
 }
 
-- (void) setOptions:(NSDictionary *) opts {
-  _options = opts;
-  [self setupPlayer];
-}
-
-- (void) setMuteMode:(BOOL) muteMode {
-  self.player.muteMode = muteMode;
-}
-
-- (void) setQuality:(NSInteger)quality {
-  self.player.quality = quality;
-}
-
-- (void)setVolume:(float)volume {
-  self.player.volume = volume;
-}
-
-- (void)setBrightness:(float)brightness {
-  self.player.brightness = brightness;
-}
-
-- (void)setupPlayer {
-  [self addSubview: self.player.playerView];
-
-  NSString *type = [_options objectForKey:@"type"];
-
-  if ([type isEqualToString:@"vidSts"]) {
-    NSString *vid = _options[@"vid"];
-    NSString *accessKeyId = _options[@"accessKeyId"];
-    NSString *accessKeySecret = _options[@"accessKeySecret"];
-    NSString *securityToken = _options[@"securityToken"];
-
-  } else if ([type isEqualToString:@"playAuth"]) {
-
-  }
-
-  [self.player prepare];
-}
-
-
-- (AliPlayer *) player{
+- (AliPlayer *)player {
   if (!_player) {
     _player = [[AliPlayer alloc] init];
     _player.autoPlay = NO;
@@ -77,15 +38,104 @@
   return _player;
 }
 
-- (UIView *) playerView {
+- (UIView *)playerView {
     if (!_playerView) {
         _playerView = [[UIView alloc] init];
     }
     return _playerView;
 }
 
+- (void)setVid: (NSString *)vid {
+  _vid = vid;
+}
+
+- (void)setPaused:(BOOL)paused {
+  if (paused) {
+    [_player pause];
+  } else {
+    [_player start];
+  }
+  _paused = paused;
+}
+
+- (void)setOptions: (NSDictionary *)opts {
+  _options = opts;
+  [self setupPlayer];
+}
+
+- (void)setupPlayer {
+  [self addSubview: self.player.playerView];
+
+  NSString *type = [_options objectForKey:@"type"];
+
+  if (_vid == nil || [_vid isEqualToString:@""]) {
+    return;
+  }
+
+  if ([type isEqualToString:@"vidSts"]) {
+    AVPVidStsSource *source = [[AVPVidStsSource alloc] init];
+    source.vid = _vid;
+    source.region = _options[@"region"];
+    source.securityToken = _options[@"securityToken"];
+    source.accessKeyId = _options[@"accessKeyId"];
+    source.accessKeySecret = _options[@"accessKeySecret"];
+
+    [_player setStsSource:source];
+  } else if ([type isEqualToString:@"playAuth"]) {
+    AVPVidAuthSource *source = [[AVPVidAuthSource alloc] init];
+    source.vid = _vid;
+    source.region = @"";
+    source.playAuth = _options[@"playAuth"];
+
+    [_player setAuthSource:source];
+  }
+
+  [_player prepare];
+  if (!_paused) {
+    [_player start];
+  }
+}
+
+- (void)setSeek: (float)seek {
+  [_player seekToTime:seek seekMode:AVP_SEEKMODE_INACCURATE];
+}
+
+- (void)setMuted: (bool)muted {
+  _player.muted = muted;
+}
+
+- (void)setVolume: (float)volume {
+  _player.volume = volume;
+}
+
 - (dispatch_queue_t)methodQueue {
   return dispatch_get_main_queue();
 }
 
+-(void)onPlayerEvent:(AliPlayer*)player eventType:(AVPEventType)eventType {
+  switch (eventType) {
+    case AVPEventPrepareDone:
+      if (self.onVideoLoad) {
+        self.onVideoLoad(@{
+          @"duration": [NSNumber numberWithFloat:_player.duration],
+          @"currentPosition": [NSNumber numberWithFloat:_player.currentPosition]});
+      }
+      break;
+    case AVPEventCompletion:
+      // 播放完成
+      break;
+    case AVPEventSeekEnd:
+      // 跳转完成
+      break;
+    case AVPEventLoopingStart:
+      // 循环播放开始
+      break;
+    default:
+      break;
+  }
+}
+
+- (void)onError:(AliPlayer*)player errorModel:(AVPErrorModel *)errorModel {
+  [player stop];
+}
 @end
