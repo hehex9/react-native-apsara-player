@@ -2,7 +2,7 @@
   "name": "react-native-apsara-player",
   "title": "A React Native wrapper around AliyunVideo SDK",
   "version": "0.1.0",
-  "description": "https://help.aliyun.com/product/29932.html?spm=a2c4g.11186623.6.540.7279195djKzvAa",
+  "description": "A React Native wrapper around AliyunVideo SDK",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

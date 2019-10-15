@@ -1,1 +1,5 @@
 example
+.gitattributes
+ios/ApsaraPlayer.xcworkspace/xcuserdata/
+ios/ApsaraPlayer.xcodeproj/xcuserdata/
+ios/ApsaraPlayer.xcodeproj/project.xcworkspace/xcuserdata/
