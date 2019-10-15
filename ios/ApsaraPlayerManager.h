@@ -2,7 +2,7 @@
 #import <React/RCTBridgeModule.h>
 #import "ApsaraPlayerView.h"
 
-@interface ApsaraPlayer : RCTViewManager <RCTBridgeModule>
+@interface ApsaraPlayerManager : RCTViewManager <RCTBridgeModule>
 
 @property (nonatomic, strong) ApsaraPlayerView *playerView;
 

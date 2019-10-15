@@ -2,13 +2,18 @@
 
 @interface ApsaraPlayerView ()
 @property (nonatomic, strong) UIView *playerView;
+@property (nonatomic, strong) AVPVidStsSource *stsSource;
 @end
 
 @implementation ApsaraPlayerView
 {
   NSDictionary *_options;
   BOOL _paused;
+  BOOL _prepared;
   NSString *_vid;
+  AliMediaDownloader *_downloader;
+  RCTPromiseResolveBlock _downloaderResolver;
+  RCTPromiseRejectBlock _downloaderRejector;
 }
 
 - (void) layoutSubviews {
@@ -47,15 +52,9 @@
 
 - (void)setVid: (NSString *)vid {
   _vid = vid;
-}
-
-- (void)setPaused:(BOOL)paused {
-  if (paused) {
-    [_player pause];
-  } else {
-    [_player start];
+  if (_prepared != YES && vid != nil && ![vid isEqualToString:@""]) {
+    [self setupPlayer];
   }
-  _paused = paused;
 }
 
 - (void)setOptions: (NSDictionary *)opts {
@@ -64,23 +63,15 @@
 }
 
 - (void)setupPlayer {
-  [self addSubview: self.player.playerView];
-
-  NSString *type = [_options objectForKey:@"type"];
-
   if (_vid == nil || [_vid isEqualToString:@""]) {
     return;
   }
 
-  if ([type isEqualToString:@"vidSts"]) {
-    AVPVidStsSource *source = [[AVPVidStsSource alloc] init];
-    source.vid = _vid;
-    source.region = _options[@"region"];
-    source.securityToken = _options[@"securityToken"];
-    source.accessKeyId = _options[@"accessKeyId"];
-    source.accessKeySecret = _options[@"accessKeySecret"];
+  [self addSubview: self.player.playerView];
 
-    [_player setStsSource:source];
+  NSString *type = [_options objectForKey:@"type"];
+  if ([type isEqualToString:@"vidSts"]) {
+    [_player setStsSource:self.stsSource];
   } else if ([type isEqualToString:@"playAuth"]) {
     AVPVidAuthSource *source = [[AVPVidAuthSource alloc] init];
     source.vid = _vid;
@@ -91,9 +82,21 @@
   }
 
   [_player prepare];
+  _prepared = YES;
+
   if (!_paused) {
+    _player.autoPlay = YES;
+  }
+}
+
+- (void)setPaused:(BOOL)paused {
+  if (paused) {
+    [_player pause];
+  } else {
     [_player start];
   }
+
+  _paused = paused;
 }
 
 - (void)setSeek: (float)seek {
@@ -108,8 +111,25 @@
   _player.volume = volume;
 }
 
+- (void)setRepeat: (bool)repeat {
+  _player.loop = repeat;
+}
+
 - (dispatch_queue_t)methodQueue {
   return dispatch_get_main_queue();
+}
+
+- (AVPVidStsSource *) stsSource {
+  if (!_stsSource) {
+    _stsSource = [[AVPVidStsSource alloc] init];
+    _stsSource.vid = _vid;
+    _stsSource.region = _options[@"region"];
+    _stsSource.securityToken = _options[@"securityToken"];
+    _stsSource.accessKeyId = _options[@"accessKeyId"];
+    _stsSource.accessKeySecret = _options[@"accessKeySecret"];
+  }
+
+  return _stsSource;
 }
 
 -(void)onPlayerEvent:(AliPlayer*)player eventType:(AVPEventType)eventType {
@@ -121,21 +141,70 @@
           @"currentPosition": [NSNumber numberWithFloat:_player.currentPosition]});
       }
       break;
-    case AVPEventCompletion:
-      // 播放完成
-      break;
     case AVPEventSeekEnd:
-      // 跳转完成
+      if (self.onVideoSeek) {
+        self.onVideoSeek(@{
+          @"currentTime": [NSNumber numberWithFloat:_player.currentPosition]});
+      }
       break;
-    case AVPEventLoopingStart:
-      // 循环播放开始
-      break;
+    // case ...
     default:
       break;
   }
 }
 
-- (void)onError:(AliPlayer*)player errorModel:(AVPErrorModel *)errorModel {
-  [player stop];
+- (void)onCurrentPositionUpdate:(AliPlayer*)player position:(int64_t)position {
+  if (self.onVideoProgress) {
+    self.onVideoProgress(@{@"currentTime": [NSNumber numberWithFloat:position]});
+  }
+}
+
+- (void)onError:(id)instance errorModel:(AVPErrorModel *)errorModel {
+  if ([instance isKindOfClass:[AliPlayer class]]) {
+    AliPlayer *player = (AliPlayer *)instance;
+    [player stop];
+    if (self.onVideoError) {
+      self.onVideoError(@{
+        @"message": errorModel.message,
+        @"code": [NSNumber numberWithInteger: errorModel.code]
+      });
+    }
+  } else if ([instance isKindOfClass:[AliMediaDownloader class]]) {
+    NSLog(@"");
+    _downloaderRejector(@"ERROR_SAVE_FAILED",
+                        [NSString stringWithFormat:@"%@:%@", @(errorModel.code), errorModel.message],
+                        nil);
+    [self destroyDownloader];
+  }
+}
+
+- (void)save:(NSDictionary *)options
+     resolve:(RCTPromiseResolveBlock)resolve
+      reject:(RCTPromiseRejectBlock)reject {
+  _downloaderResolver = resolve;
+  _downloaderRejector = reject;
+
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+
+  _downloader = [[AliMediaDownloader alloc] init];
+  [_downloader setDelegate:self];
+  [_downloader setSaveDirectory: [paths firstObject]];
+  [_downloader prepareWithVid:self.stsSource];
+}
+
+- (void)destroyDownloader {
+  [_downloader destroy];
+  _downloader = nil;
+}
+
+-(void)onPrepared:(AliMediaDownloader *)downloader mediaInfo:(AVPMediaInfo *)info {
+  NSArray<AVPTrackInfo*>* tracks = info.tracks;
+  [downloader selectTrack:[tracks objectAtIndex:0].trackIndex];
+  [downloader start];
+}
+
+-(void)onCompletion:(AliMediaDownloader *)downloader {
+  _downloaderResolver(@{@"uri": downloader.downloadedFilePath});
+  [self destroyDownloader];
 }
 @end

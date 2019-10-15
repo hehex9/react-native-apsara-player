@@ -1,5 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, requireNativeComponent} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  NativeModules,
+  findNodeHandle,
+  requireNativeComponent,
+} from 'react-native';
 import PropTypes from 'prop-types';
 
 export default class ApsaraPlayer extends React.Component {
@@ -18,11 +24,29 @@ export default class ApsaraPlayer extends React.Component {
     }
   };
 
+  _onError = event => {
+    if (this.props.onError) {
+      this.props.onError(event.nativeEvent);
+    }
+  };
+
+  _onProgress = event => {
+    if (this.props.onProgress) {
+      this.props.onProgress(event.nativeEvent);
+    }
+  };
+
   _onSeek = event => {
     if (this.props.onSeek) {
       this.props.onSeek(event.nativeEvent);
     }
   };
+
+  save = options =>
+    NativeModules.ApsaraPlayerManager.save(
+      options,
+      findNodeHandle(this._player),
+    );
 
   render() {
     const style = [styles.base, this.props.style];
@@ -39,6 +63,8 @@ export default class ApsaraPlayer extends React.Component {
           paused={this.props.paused}
           onVideoLoad={this._onLoad}
           onVideoSeek={this._onSeek}
+          onVideoError={this._onError}
+          onVideoProgress={this._onProgress}
         />
       </View>
     );
