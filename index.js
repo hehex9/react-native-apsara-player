@@ -1,12 +1,13 @@
-import React from "react";
+import React from 'react';
 import {
   View,
+  Platform,
   StyleSheet,
   NativeModules,
   findNodeHandle,
-  requireNativeComponent
-} from "react-native";
-import PropTypes from "prop-types";
+  requireNativeComponent,
+} from 'react-native';
+import PropTypes from 'prop-types';
 
 export default class ApsaraPlayer extends React.Component {
   setNativeProps(nativeProps) {
@@ -14,8 +15,8 @@ export default class ApsaraPlayer extends React.Component {
   }
 
   seek = time => {
-    if (isNaN(time)) throw new Error("Specified time is not a number");
-    this.setNativeProps({ seek: time });
+    if (isNaN(time)) throw new Error('Specified time is not a number');
+    this.setNativeProps({seek: time});
   };
 
   _onLoad = event => {
@@ -42,11 +43,13 @@ export default class ApsaraPlayer extends React.Component {
     }
   };
 
-  save = options =>
-    NativeModules.ApsaraPlayerManager.save(
-      options,
-      findNodeHandle(this._player)
-    );
+  save = options => {
+    const module =
+      Platform.OS === 'iOS'
+        ? NativeModules.ApsaraPlayerManager
+        : NativeModules.ApsaraPlayerModule;
+    return module.save(options, findNodeHandle(this._player));
+  };
 
   render() {
     const style = [styles.base, this.props.style];
@@ -72,7 +75,6 @@ export default class ApsaraPlayer extends React.Component {
 }
 
 ApsaraPlayer.propTypes = {
-  vid: PropTypes.string,
   repeat: PropTypes.bool,
   paused: PropTypes.bool,
   muted: PropTypes.bool,
@@ -80,17 +82,17 @@ ApsaraPlayer.propTypes = {
   onLoad: PropTypes.func,
   onSeek: PropTypes.func,
   onError: PropTypes.func,
-  onProgress: PropTypes.func
+  onProgress: PropTypes.func,
 };
 
 const styles = StyleSheet.create({
   base: {
-    overflow: "hidden"
-  }
+    overflow: 'hidden',
+  },
 });
 
-const RNApsaraPlayer = requireNativeComponent("ApsaraPlayer", ApsaraPlayer, {
+const RNApsaraPlayer = requireNativeComponent('ApsaraPlayer', ApsaraPlayer, {
   nativeOnly: {
-    seek: true
-  }
+    seek: true,
+  },
 });
