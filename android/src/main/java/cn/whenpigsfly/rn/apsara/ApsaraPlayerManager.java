@@ -1,18 +1,27 @@
 package cn.whenpigsfly.rn.apsara;
 
-import android.view.View;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
-// AppCompatCheckBox import for React Native pre-0.60:
-import android.support.v7.widget.AppCompatCheckBox;
-// AppCompatCheckBox import for React Native 0.60(+):
-// import androidx.appcompat.widget.AppCompatCheckBox;
-
+import com.aliyun.player.AliPlayer;
+import com.aliyun.player.AliPlayerFactory;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
+import com.facebook.react.uimanager.annotations.ReactProp;
 
-public class ApsaraPlayerManager extends SimpleViewManager<View> {
+import java.util.Map;
+
+import javax.annotation.Nullable;
+
+import cn.whenpigsfly.rn.apsara.ApsaraPlayerView.Events;
+
+public class ApsaraPlayerManager extends SimpleViewManager<ApsaraPlayerView> {
 
     public static final String REACT_CLASS = "ApsaraPlayer";
+
+    private SurfaceView mSurfaceView;
 
     @Override
     public String getName() {
@@ -20,10 +29,82 @@ public class ApsaraPlayerManager extends SimpleViewManager<View> {
     }
 
     @Override
-    public View createViewInstance(ThemedReactContext c) {
-        // TODO: Implement some actually useful functionality
-        AppCompatCheckBox cb = new AppCompatCheckBox(c);
-        cb.setChecked(true);
-        return cb;
+    public ApsaraPlayerView createViewInstance(ThemedReactContext c) {
+        final AliPlayer player = AliPlayerFactory.createAliPlayer(c);
+
+        ApsaraPlayerView playerView = new ApsaraPlayerView(c, player);
+        mSurfaceView = new SurfaceView(c);
+        playerView.addView(mSurfaceView);
+
+        mSurfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                player.setDisplay(holder);
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int i, int i1, int i2) {
+                player.redraw();
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                player.setDisplay(null);
+            }
+        });
+
+        return playerView;
+    }
+
+    @Override
+    @Nullable
+    public Map getExportedCustomDirectEventTypeConstants() {
+        MapBuilder.Builder builder = MapBuilder.builder();
+        for (Events event: Events.values()) {
+            builder.put(event.toString(), MapBuilder.of("registrationName", event.toString()));
+        }
+        return builder.build();
+    }
+
+    @ReactProp(name = "vid")
+    public void setVid(final ApsaraPlayerView view, final String vid) {
+        view.setVid(vid);
+    }
+
+    @ReactProp(name = "paused", defaultBoolean = true)
+    public void setPaused(final ApsaraPlayerView view, final boolean paused) {
+        view.setPaused(paused);
+    }
+
+    @ReactProp(name = "repeat", defaultBoolean = true)
+    public void setRepeat(final ApsaraPlayerView view, final boolean repeat) {
+        view.setRepeat(repeat);
+    }
+
+    @ReactProp(name = "muted", defaultBoolean = false)
+    public void setMuted(final ApsaraPlayerView view, final boolean muted) {
+        view.setMuted(muted);
+    }
+
+    @ReactProp(name = "volume", defaultFloat = 1.0f)
+    public void setVolume(final ApsaraPlayerView view, final float volume) {
+        view.setVolume(volume);
+    }
+
+    @ReactProp(name = "seek", defaultFloat = 0.0f)
+    public void setSeek(final ApsaraPlayerView view, final float seek) {
+        view.setSeek((long) seek);
+    }
+
+    @ReactProp(name = "options")
+    public void setOptions(final ApsaraPlayerView view, @Nullable ReadableMap options) {
+        view.setOptions(
+                MapBuilder.of(
+                        "region", options.getString("region"),
+                        "accessKeyId", options.getString("accessKeyId"),
+                        "securityToken", options.getString("securityToken"),
+                        "accessKeySecret", options.getString("accessKeySecret")
+                )
+        );
     }
 }

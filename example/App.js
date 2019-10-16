@@ -8,9 +8,9 @@ const options = {
   type: 'vidSts',
   region: 'cn-shanghai',
   securityToken:
-    'CAIS6gF1q6Ft5B2yfSjIr47QE9GCnZRz7rqsdxXgkGEFX8gYpLzAuDz2IHpNdXJtA+0fsPk/lWtW6vYdlq1zRp9IHYsKtiLFq8Y5yxioRqacke7XhOV2pf/IMGyXDAGBr622Su7lTdTbV+6wYlTf7EFayqf7cjPQND7Mc+f+6/hdY88QQxOzYBdfGd5SPXECksIBMmbLPvvfWXyDwEioVRQx51sk2D4hsv7ukpDAuiCz1gOqlrUnwK3qOYWhYsVWO5Nybsy4xuQedNCaincBsEUQqf4o0fwVommb7o6HbEdW7w+BN+fEblCO2POk4cIagAEJFJ8bXD0DxQPYUfZibW7k2olIMZlSA1XtuuWv+5i/YxpgDRuDRC9JbZQSf7NbGqmrPOvEMbYhz4wpFLX9VqdiVPD3BD6UEvFNMBU5pxTcnpw4yh5S3BCsuVUn6F88ZzHIpfAE+cf851iKTFVxoZ51Q9NSF2DNgPwMw3US6f69Iw==',
-  accessKeyId: 'STS.NMeXk6pKRYxGu3QtaPSG4KykZ',
-  accessKeySecret: 'GMJWFUsFox8GioEDYWRFGPbZ6QkDTX1QoSrH6qqY9ZLg',
+    'CAIS6gF1q6Ft5B2yfSjIr4jeeNj2364U4paKa0DYhlgkVblm2faTuzz2IHpNdXJtA+0fsPk/lWtW6vYdlq1zRp9IHaVp4C7Fq8Y5yxioRqacke7XhOV2pf/IMGyXDAGBr622Su7lTdTbV+6wYlTf7EFayqf7cjPQND7Mc+f+6/hdY88QQxOzYBdfGd5SPXECksIBMmbLPvvfWXyDwEioVRQx51sk2D4hsv7ukpDAuiCz1gOqlrUnwK3qOYWhYsVWO5Nybsy4xuQedNCaincBsEUQqf4o0fwVommb7o6HbEdW7w+BN+fEblCO2POk4cIagAGHVV41pLbjgKt6QGhQuPQShmEzvB7lDARLxEzdG6L2nSc94b9BcBp/7mz79LgmnnEKRUeTZm3yZm1DbLiYwWfofMp7tpeMxmVf4TFOx/17Ho8f4Br3inDW3NlJAf+4Eh2nL3vedBYJdbWZCFH8khBTfFY0An8t0hGI+TXPgqR5EA==',
+  accessKeyId: 'STS.NKk3bB2q5UTaifibXqY6J638Y',
+  accessKeySecret: 'EBGQtdsqQSb5Qx5yS26ScoWaZMnMrK9QiX4uLj4xqbsG',
 };
 
 export default class App extends Component {
@@ -43,7 +43,7 @@ export default class App extends Component {
             this._player
               .save()
               .then(rs => {
-                console.log('result:', rs);
+                Alert.alert('下载完成', rs.uri);
               })
               .catch(e => {
                 console.warn(e);

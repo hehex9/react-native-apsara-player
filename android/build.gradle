@@ -63,6 +63,8 @@ dependencies {
     // https://github.com/facebook/react-native/blob/0.61-stable/template/android/app/build.gradle#L192
     //noinspection GradleDynamicVersion
     implementation 'com.facebook.react:react-native:+'  // From node_modules
+    implementation 'com.aliyun.sdk.android:AliyunPlayer:4.5.0-full'
+    implementation 'com.alivc.conan:AlivcConan:0.9.5'
 }
 
 def configureReactNativePom(def pom) {
