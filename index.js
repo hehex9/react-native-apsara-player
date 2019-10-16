@@ -45,7 +45,7 @@ export default class ApsaraPlayer extends React.Component {
 
   save = options => {
     const module =
-      Platform.OS === 'iOS'
+      Platform.OS === 'ios'
         ? NativeModules.ApsaraPlayerManager
         : NativeModules.ApsaraPlayerModule;
     return module.save(options, findNodeHandle(this._player));
