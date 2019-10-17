@@ -61,7 +61,7 @@ export default class ApsaraPlayer extends React.Component {
             this._player = r;
           }}
           style={StyleSheet.absoluteFill}
-          vid={this.props.vid}
+          source={this.props.source}
           options={this.props.options}
           paused={this.props.paused}
           onVideoLoad={this._onLoad}
@@ -79,6 +79,21 @@ ApsaraPlayer.propTypes = {
   paused: PropTypes.bool,
   muted: PropTypes.bool,
   volume: PropTypes.number,
+  source: PropTypes.shape({
+    uri: PropTypes.string,
+    sts: PropTypes.shape({
+      vid: PropTypes.string,
+      region: PropTypes.string,
+      accessKeyId: PropTypes.string,
+      accessKeySecret: PropTypes.string,
+      securityToken: PropTypes.string,
+    }),
+    auth: PropTypes.shape({
+      vid: PropTypes.string,
+      region: PropTypes.string,
+      playAuth: PropTypes.string,
+    }),
+  }),
   onLoad: PropTypes.func,
   onSeek: PropTypes.func,
   onError: PropTypes.func,

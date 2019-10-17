@@ -12,6 +12,8 @@ import com.aliyun.player.bean.InfoBean;
 import com.aliyun.player.bean.InfoCode;
 import com.aliyun.player.nativeclass.MediaInfo;
 import com.aliyun.player.nativeclass.TrackInfo;
+import com.aliyun.player.source.UrlSource;
+import com.aliyun.player.source.VidAuth;
 import com.aliyun.player.source.VidSts;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -52,11 +54,10 @@ public class ApsaraPlayerView extends FrameLayout implements
     private AliMediaDownloader mDownloader = null;
     private Promise mDownloaderPromise;
 
-    private Map<String, String> mOptions;
+    private Map<String, Object> mSource;
     private AliPlayer mPlayer;
     private boolean mPrepared = false;
     private boolean mRepeat;
-    private String mVid;
 
     public ApsaraPlayerView(ThemedReactContext context, AliPlayer player) {
         super(context);
@@ -74,21 +75,22 @@ public class ApsaraPlayerView extends FrameLayout implements
         }
 
         mPlayer = AliPlayerFactory.createAliPlayer(mContext);
-
-        prepare();
     }
 
     public void prepare() {
-        if (mVid == null || mVid.isEmpty()) {
-            return;
+        VidSts sts = getStsSource(mSource.get("sts"));
+        VidAuth auth = getAuthSource(mSource.get("auth"));
+
+        if (sts != null) {
+            mPlayer.setDataSource(sts);
+        } else if (auth != null){
+            mPlayer.setDataSource(auth);
+        } else if (mSource.get("uri") != null && !String.valueOf(mSource.get("uri")).isEmpty()) {
+            UrlSource source = new UrlSource();
+            source.setUri((String) mSource.get("uri"));
+            mPlayer.setDataSource(source);
         }
 
-        VidSts sts = getStsSource();
-        if (sts == null) {
-            return;
-        }
-
-        mPlayer.setDataSource(sts);
         mPlayer.prepare();
 
         mPlayer.setOnInfoListener(this);
@@ -101,14 +103,6 @@ public class ApsaraPlayerView extends FrameLayout implements
         }
 
         mPrepared = true;
-    }
-
-    public void setVid(final String vid) {
-        mVid = vid;
-
-        if (!mPrepared) {
-            prepare();
-        }
     }
 
     public void setPaused(final boolean paused) {
@@ -132,8 +126,8 @@ public class ApsaraPlayerView extends FrameLayout implements
         mPlayer.setVolume(volume);
     }
 
-    public void setOptions(final Map options) {
-        mOptions = options;
+    public void setSource(final Map source) {
+        mSource = source;
         prepare();
     }
 
@@ -141,21 +135,43 @@ public class ApsaraPlayerView extends FrameLayout implements
         mPlayer.seekTo(position);
     }
 
-    public VidSts getStsSource() {
-        if (mOptions == null
-                || mOptions.get("accessKeyId").isEmpty()
-                || mOptions.get("accessKeySecret").isEmpty()
-                || mOptions.get("securityToken").isEmpty()) {
+    private VidSts getStsSource(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+
+        Map<String, String> opts = (Map<String, String>) obj;
+        if (!opts.containsKey("vid")
+                || !opts.containsKey("accessKeyId")
+                || !opts.containsKey("accessKeySecret")
+                || !opts.containsKey("securityToken")) {
             return null;
         }
 
         VidSts sts = new VidSts();
-        sts.setVid(mVid);
-        sts.setAccessKeyId(mOptions.get("accessKeyId"));
-        sts.setAccessKeySecret(mOptions.get("accessKeySecret"));
-        sts.setSecurityToken(mOptions.get("securityToken"));
-        sts.setRegion(mOptions.containsKey("region") ? mOptions.get("region") : "");
+        sts.setVid(opts.get("vid"));
+        sts.setAccessKeyId(opts.get("accessKeyId"));
+        sts.setAccessKeySecret(opts.get("accessKeySecret"));
+        sts.setSecurityToken(opts.get("securityToken"));
+        sts.setRegion(opts.containsKey("region") ? opts.get("region") : "");
         return sts;
+    }
+
+    private VidAuth getAuthSource(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+
+        Map<String, String> opts = (Map<String, String>) obj;
+        if (!opts.containsKey("vid") || !opts.containsKey("playAuth")) {
+            return null;
+        }
+
+        VidAuth auth = new VidAuth();
+        auth.setVid(opts.get("vid"));
+        auth.setPlayAuth(opts.get("playAuth"));
+        auth.setRegion(opts.containsKey("region") ? opts.get("region") : "");
+        return auth;
     }
 
     @Override
@@ -199,7 +215,18 @@ public class ApsaraPlayerView extends FrameLayout implements
                         .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                         .getAbsolutePath()
         );
-        mDownloader.prepare(getStsSource());
+
+        Map opts = options == null ? mSource : options.toHashMap();
+        VidSts sts = getStsSource(opts.get("sts"));
+        VidAuth auth = getAuthSource(opts.get("auth"));
+
+        if (sts != null) {
+            mDownloader.prepare(sts);
+        } else if (auth != null) {
+            mDownloader.prepare(auth);
+        } else {
+            return;
+        }
 
         mDownloader.setOnCompletionListener(new AliMediaDownloader.OnCompletionListener() {
             @Override

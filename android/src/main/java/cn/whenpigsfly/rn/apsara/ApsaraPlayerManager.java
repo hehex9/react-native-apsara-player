@@ -66,11 +66,6 @@ public class ApsaraPlayerManager extends SimpleViewManager<ApsaraPlayerView> {
         return builder.build();
     }
 
-    @ReactProp(name = "vid")
-    public void setVid(final ApsaraPlayerView view, final String vid) {
-        view.setVid(vid);
-    }
-
     @ReactProp(name = "paused", defaultBoolean = true)
     public void setPaused(final ApsaraPlayerView view, final boolean paused) {
         view.setPaused(paused);
@@ -96,15 +91,12 @@ public class ApsaraPlayerManager extends SimpleViewManager<ApsaraPlayerView> {
         view.setSeek((long) seek);
     }
 
-    @ReactProp(name = "options")
-    public void setOptions(final ApsaraPlayerView view, @Nullable ReadableMap options) {
-        view.setOptions(
-                MapBuilder.of(
-                        "region", options.getString("region"),
-                        "accessKeyId", options.getString("accessKeyId"),
-                        "securityToken", options.getString("securityToken"),
-                        "accessKeySecret", options.getString("accessKeySecret")
-                )
-        );
+    @ReactProp(name = "source")
+    public void setSource(final ApsaraPlayerView view, @Nullable ReadableMap source) {
+        if (source == null) {
+            return;
+        }
+
+        view.setSource(source.toHashMap());
     }
 }

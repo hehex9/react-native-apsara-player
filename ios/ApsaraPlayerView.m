@@ -2,15 +2,13 @@
 
 @interface ApsaraPlayerView ()
 @property (nonatomic, strong) UIView *playerView;
-@property (nonatomic, strong) AVPVidStsSource *stsSource;
 @end
 
 @implementation ApsaraPlayerView
 {
-  NSDictionary *_options;
+  NSDictionary *_src;
   BOOL _paused;
   BOOL _prepared;
-  NSString *_vid;
   AliMediaDownloader *_downloader;
   RCTPromiseResolveBlock _downloaderResolver;
   RCTPromiseRejectBlock _downloaderRejector;
@@ -50,37 +48,36 @@
     return _playerView;
 }
 
-- (void)setVid: (NSString *)vid {
-  _vid = vid;
-  if (_prepared != YES && vid != nil && ![vid isEqualToString:@""]) {
-    [self setupPlayer];
-  }
+- (AVPVidStsSource *) stsSource:(NSDictionary *)opts {
+  AVPVidStsSource *source = [[AVPVidStsSource alloc] init];
+  source.vid = opts[@"vid"];
+  source.region = opts[@"region"];
+  source.securityToken = opts[@"securityToken"];
+  source.accessKeyId = opts[@"accessKeyId"];
+  source.accessKeySecret = opts[@"accessKeySecret"];
+  return source;
 }
 
-- (void)setOptions: (NSDictionary *)opts {
-  _options = opts;
-  [self setupPlayer];
+- (AVPVidAuthSource *) authSource:(NSDictionary *)opts {
+  AVPVidAuthSource *source = [[AVPVidAuthSource alloc] init];
+  source.vid = opts[@"vid"];
+  source.region = opts[@"region"];
+  source.playAuth = opts[@"playAuth"];
+  return source;
 }
 
-- (void)setupPlayer {
-  if (_vid == nil || [_vid isEqualToString:@""]) {
-    return;
-  }
+- (void)setSource: (NSDictionary *)source {
+  _src = source;
 
   [self addSubview: self.player.playerView];
 
-  NSString *type = [_options objectForKey:@"type"];
-  if ([type isEqualToString:@"vidSts"]) {
-    [_player setStsSource:self.stsSource];
-  } else if ([type isEqualToString:@"playAuth"]) {
-    AVPVidAuthSource *source = [[AVPVidAuthSource alloc] init];
-    source.vid = _vid;
-    source.region = @"";
-    source.playAuth = _options[@"playAuth"];
-
-    [_player setAuthSource:source];
+  if (_src[@"uri"] && ![(NSString *)_src[@"uri"] isEqualToString:@""]) {
+    [_player setUrlSource:[[AVPUrlSource alloc] urlWithString:_src[@"uri"]]];
+  } else if (_src[@"sts"] && _src[@"sts"][@"vid"]) {
+    [_player setStsSource: [self stsSource:_src[@"sts"]]];
+  } else if (_src[@"auth"] && _src[@"auth"][@"vid"]) {
+    [_player setAuthSource: [self authSource:_src[@"auth"]]];
   }
-
   [_player prepare];
   _prepared = YES;
 
@@ -117,19 +114,6 @@
 
 - (dispatch_queue_t)methodQueue {
   return dispatch_get_main_queue();
-}
-
-- (AVPVidStsSource *) stsSource {
-  if (!_stsSource) {
-    _stsSource = [[AVPVidStsSource alloc] init];
-    _stsSource.vid = _vid;
-    _stsSource.region = _options[@"region"];
-    _stsSource.securityToken = _options[@"securityToken"];
-    _stsSource.accessKeyId = _options[@"accessKeyId"];
-    _stsSource.accessKeySecret = _options[@"accessKeySecret"];
-  }
-
-  return _stsSource;
 }
 
 -(void)onPlayerEvent:(AliPlayer*)player eventType:(AVPEventType)eventType {
@@ -189,7 +173,15 @@
   _downloader = [[AliMediaDownloader alloc] init];
   [_downloader setDelegate:self];
   [_downloader setSaveDirectory: [paths firstObject]];
-  [_downloader prepareWithVid:self.stsSource];
+
+  NSDictionary *opts = options ? options : _src;
+  if (opts[@"sts"] && opts[@"sts"][@"vid"]) {
+    [_downloader prepareWithVid:[self stsSource:opts[@"sts"]]];
+  } else if (opts[@"auth"] && opts[@"auth"][@"vid"]) {
+    [_downloader prepareWithPlayAuth:[self authSource:opts[@"auth"]]];
+  } else {
+    reject(@"ERROR_SAVE_FAILED", @"invalid source", nil);
+  }
 }
 
 - (void)destroyDownloader {

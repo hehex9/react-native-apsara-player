@@ -10,8 +10,6 @@ import com.facebook.react.uimanager.NativeViewHierarchyManager;
 import com.facebook.react.uimanager.UIBlock;
 import com.facebook.react.uimanager.UIManagerModule;
 
-import java.util.Map;
-
 public class ApsaraPlayerModule extends ReactContextBaseJavaModule {
     private ReactApplicationContext mReactContext;
 

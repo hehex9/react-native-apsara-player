@@ -4,13 +4,10 @@ import Slider from '@react-native-community/slider';
 import ApsaraPlayer from 'react-native-apsara-player';
 import Button from './button';
 
-const options = {
-  type: 'vidSts',
-  region: 'cn-shanghai',
-  securityToken:
-    'CAIS6gF1q6Ft5B2yfSjIr4jeeNj2364U4paKa0DYhlgkVblm2faTuzz2IHpNdXJtA+0fsPk/lWtW6vYdlq1zRp9IHaVp4C7Fq8Y5yxioRqacke7XhOV2pf/IMGyXDAGBr622Su7lTdTbV+6wYlTf7EFayqf7cjPQND7Mc+f+6/hdY88QQxOzYBdfGd5SPXECksIBMmbLPvvfWXyDwEioVRQx51sk2D4hsv7ukpDAuiCz1gOqlrUnwK3qOYWhYsVWO5Nybsy4xuQedNCaincBsEUQqf4o0fwVommb7o6HbEdW7w+BN+fEblCO2POk4cIagAGHVV41pLbjgKt6QGhQuPQShmEzvB7lDARLxEzdG6L2nSc94b9BcBp/7mz79LgmnnEKRUeTZm3yZm1DbLiYwWfofMp7tpeMxmVf4TFOx/17Ho8f4Br3inDW3NlJAf+4Eh2nL3vedBYJdbWZCFH8khBTfFY0An8t0hGI+TXPgqR5EA==',
-  accessKeyId: 'STS.NKk3bB2q5UTaifibXqY6J638Y',
-  accessKeySecret: 'EBGQtdsqQSb5Qx5yS26ScoWaZMnMrK9QiX4uLj4xqbsG',
+const source = {
+  auth: null,
+  sts: null,
+  uri: 'https://player.alicdn.com/video/aliyunmedia.mp4',
 };
 
 export default class App extends Component {
@@ -80,14 +77,13 @@ export default class App extends Component {
       <View style={styles.container}>
         <ApsaraPlayer
           ref={player => (this._player = player)}
-          vid="ee692baf69514da0a755863fc874b39c"
           style={styles.player}
+          source={source}
           paused={this.state.paused}
           onLoad={this._onLoad}
           onError={this._onError}
           onSeek={this._onSeekEnd}
           onProgress={this._onProgress}
-          options={options}
         />
 
         <Text>
@@ -109,7 +105,9 @@ export default class App extends Component {
             onPress={this.state.paused ? this.start : this.stop}
           />
 
-          <Button title="下载" onPress={this.save} style={styles.button} />
+          {(source.sts || source.auth) && (
+            <Button title="下载" onPress={this.save} style={styles.button} />
+          )}
         </View>
       </View>
     );
