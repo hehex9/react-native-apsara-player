@@ -1,10 +1,10 @@
-# react-native-apsara-player
-A react-native wrapper for [aliyun video player](https://help.aliyun.com/document_detail/125579.html)
+## react-native-apsara-player
+A react-native wrapper around [aliyun video player](https://help.aliyun.com/document_detail/125579.html)
 
 Check the `example` for more details
 
 
-## Installation
+### Installation
 
 Using npm:
 ```shell
@@ -16,7 +16,6 @@ or yarn:
 yarn add --save react-native-apsara-player
 ```
 
-### Installation
 <details>
   <summary>Standard Method</summary>
 
@@ -26,7 +25,7 @@ Run `pod install` in the `ios` directory.
 
 **React Native 0.59 and below**
 
-Run `react-native link react-native-video` to link the react-native-video library.
+Run `react-native link react-native-apsara-video` to link library.
 </details>
 
 <details>
@@ -57,24 +56,55 @@ protected List<ReactPackage> getPackages() {
 </details>
 
 
-## Usage
+### Usage example
 ```javascript
+import React from 'react'
 import ApsaraPlayer from 'react-native-apsara-player';
 
-const uri = "https://player.alicdn.com/video/aliyunmedia.mp4"
+const uriSource = { uri: "https://player.alicdn.com/video/aliyunmedia.mp4" }
 
-export default function() {
-  return (
-    <ApsaraPlayer
-      ref={ref => {
-        this.player = ref
-      })
-      source={{ uri }}
-      paused={true}
-      onLoad={this._onLoad}
-      onSeek={this._onSeek}
-      onError={this._onError}
-    />
-  )
+const stsSource = {
+  vid: 'YOUR_VID'
+  region: 'YOUR_REGION',
+  accessKeyId: 'YOUR_ACCESS_KEY_ID',
+  accessKeySecret: 'YOUR_ACCESS_KEY_SECRET',
+  securityToken: 'YOUR_SECURITY_TOKEN',
+}
+
+const authSource = {
+  vid: 'YOUR_VID'
+  region: 'YOUR_REGION',
+  playAuth: 'YOUR_PLAY_AUTH',
+}
+
+export default class extends React.Component {
+  render() {
+    return (
+      <ApsaraPlayer
+        ref={ref => {
+          this.player = ref
+        })
+        source={uriSource}
+        paused={true}
+        onLoad={this._onLoad}
+        onSeek={this._onSeek}
+        onError={this._onError}
+        onProgress={}
+      />
+    )
+  }
 };
 ```
+
+### Component props
+| prop | default | type | description |
+| ---- | ---- | ----| ---- |
+| paused | false | Boolean | Whether the video is paused |
+| repeat | false | Boolean | Whether to repeat the video |
+| muted | false | Boolean | Whether the audio is muted |
+| volume | 1 | Boolean | Adjust the volume |
+| source | none | Object | Source of the video |
+| onLoad | none | Function | Callback function that is called when the video is loaded |
+| onSeek | none | Function | Callback function that is called when a seek completes |
+| onError | none | Function | Function that is invoked when the video load fails |
+| onProgress | none | Function | Function that is invoked when the video is updates |
