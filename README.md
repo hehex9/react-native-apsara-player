@@ -1,43 +1,80 @@
 # react-native-apsara-player
+A react-native wrapper for [aliyun video player](https://help.aliyun.com/document_detail/125579.html)
 
-## Getting started
+Check the `example` for more details
 
-`$ npm install react-native-apsara-player --save`
 
-### Mostly automatic installation
+## Installation
 
-`$ react-native link react-native-apsara-player`
+Using npm:
+```shell
+npm install --save react-native-apsara-player
+```
 
-### Manual installation
+or yarn:
+```shell
+yarn add --save react-native-apsara-player
+```
 
+### Installation
+<details>
+  <summary>Standard Method</summary>
+
+**React Native 0.60 and above**
+
+Run `pod install` in the `ios` directory.
+
+**React Native 0.59 and below**
+
+Run `react-native link react-native-video` to link the react-native-video library.
+</details>
+
+<details>
+  <summary>Manually Method</summary>
 
 #### iOS
-
-1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-apsara-player` and add `ApsaraPlayer.xcodeproj`
-3. In XCode, in the project navigator, select your project. Add `libApsaraPlayer.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
-4. Run your project (`Cmd+R`)<
+[https://facebook.github.io/react-native/docs/linking-libraries-ios](https://facebook.github.io/react-native/docs/linking-libraries-ios)
 
 #### Android
 
-1. Open up `android/app/src/main/java/[...]/MainApplication.java`
-  - Add `import cn.whenpigsfly.rn.apsara.ApsaraPlayerPackage;` to the imports at the top of the file
-  - Add `new ApsaraPlayerPackage()` to the list returned by the `getPackages()` method
-2. Append the following lines to `android/settings.gradle`:
-  	```
-  	include ':react-native-apsara-player'
-  	project(':react-native-apsara-player').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-apsara-player/android')
-  	```
-3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
-  	```
-      compile project(':react-native-apsara-player')
-  	```
+**android/settings.gradle**
+```gradle
+include ':react-native-apsara-player'
+project(':react-native-apsara-player').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-apsara-player/android')
+```
+
+**MainApplication.java**
+
+```java
+@Override
+protected List<ReactPackage> getPackages() {
+    return Arrays.asList(
+            new MainReactPackage(),
+            new ApsaraPlayerPackage()
+    );
+}
+```
+</details>
 
 
 ## Usage
 ```javascript
 import ApsaraPlayer from 'react-native-apsara-player';
 
-// TODO: What to do with the module?
-ApsaraPlayer;
+const uri = "https://player.alicdn.com/video/aliyunmedia.mp4"
+
+export default function() {
+  return (
+    <ApsaraPlayer
+      ref={ref => {
+        this.player = ref
+      })
+      source={{ uri }}
+      paused={true}
+      onLoad={this._onLoad}
+      onSeek={this._onSeek}
+      onError={this._onError}
+    />
+  )
+};
 ```
