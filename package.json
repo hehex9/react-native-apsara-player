@@ -13,7 +13,9 @@
     "baseUrl": "https://github.com/hehex9/react-native-apsara-player"
   },
   "keywords": [
-    "react-native"
+    "react-native",
+    "aliyun",
+    "video"
   ],
   "author": {
     "name": "hehex9",
