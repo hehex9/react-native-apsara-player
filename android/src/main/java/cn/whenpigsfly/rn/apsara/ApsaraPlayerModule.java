@@ -37,4 +37,19 @@ public class ApsaraPlayerModule extends ReactContextBaseJavaModule {
             promise.reject("ERROR", e);
         }
     }
+
+    @ReactMethod
+    public void destroy(final int reactTag) {
+        try {
+            UIManagerModule uiManager = mReactContext.getNativeModule(UIManagerModule.class);
+            uiManager.addUIBlock(new UIBlock() {
+                public void execute (NativeViewHierarchyManager nvhm) {
+                    ApsaraPlayerView view = (ApsaraPlayerView) nvhm.resolveView(reactTag);
+                    view.destroy();
+                }
+            });
+        } catch (IllegalViewOperationException e) {
+            // ignore
+        }
+    }
 }

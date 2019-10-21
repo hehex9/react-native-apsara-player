@@ -13,5 +13,6 @@
 @property (nonatomic, copy) RCTDirectEventBlock onVideoProgress;
 
 - (void)save:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
+- (void)destroy;
 
 @end

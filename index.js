@@ -10,6 +10,16 @@ import {
 import PropTypes from 'prop-types';
 
 export default class ApsaraPlayer extends React.Component {
+  get _module() {
+    return Platform.OS === 'ios'
+      ? NativeModules.ApsaraPlayerManager
+      : NativeModules.ApsaraPlayerModule;
+  }
+
+  componentWillUnmount() {
+    this._module.destroy(findNodeHandle(this._player));
+  }
+
   setNativeProps(nativeProps) {
     this._player.setNativeProps(nativeProps);
   }
@@ -44,11 +54,7 @@ export default class ApsaraPlayer extends React.Component {
   };
 
   save = options => {
-    const module =
-      Platform.OS === 'ios'
-        ? NativeModules.ApsaraPlayerManager
-        : NativeModules.ApsaraPlayerModule;
-    return module.save(options, findNodeHandle(this._player));
+    return this._module.save(options, findNodeHandle(this._player));
   };
 
   render() {

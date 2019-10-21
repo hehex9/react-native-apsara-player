@@ -162,6 +162,7 @@
   }
 }
 
+# pragma save
 - (void)save:(NSDictionary *)options
      resolve:(RCTPromiseResolveBlock)resolve
       reject:(RCTPromiseRejectBlock)reject {
@@ -198,5 +199,16 @@
 -(void)onCompletion:(AliMediaDownloader *)downloader {
   _downloaderResolver(@{@"uri": downloader.downloadedFilePath});
   [self destroyDownloader];
+}
+
+# pragma destroy
+- (void)destroy {
+  if (_player) {
+    [_player destroy];
+  }
+
+  if (_downloader) {
+    [_downloader destroy];
+  }
 }
 @end

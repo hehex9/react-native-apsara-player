@@ -43,6 +43,17 @@ RCT_REMAP_METHOD(save,
   }];
 }
 
+RCT_REMAP_METHOD(destroy, reactTag:(nonnull NSNumber *)reactTag) {
+  [self.bridge.uiManager prependUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, ApsaraPlayerView *> *viewRegistry) {
+    ApsaraPlayerView *view = viewRegistry[reactTag];
+    if (![view isKindOfClass:[ApsaraPlayerView class]]) {
+      RCTLogError(@"Invalid view returned from registry, expecting ApsaraPlayerView, got: %@", view);
+    } else {
+      [view destroy];
+    }
+  }];
+}
+
 + (BOOL)requiresMainQueueSetup {
   return YES;
 }

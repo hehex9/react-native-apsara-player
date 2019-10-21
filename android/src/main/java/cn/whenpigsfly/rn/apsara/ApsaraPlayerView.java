@@ -238,7 +238,7 @@ public class ApsaraPlayerView extends FrameLayout implements
                 WritableMap map = Arguments.createMap();
                 map.putString("uri", mDownloader.getFilePath());
                 mDownloaderPromise.resolve(map);
-                release();
+                releaseDownloader();
             }
         });
 
@@ -258,17 +258,25 @@ public class ApsaraPlayerView extends FrameLayout implements
                     mDownloaderPromise.reject(new Exception(errorInfo.getMsg()));
                 }
 
-                release();
+                releaseDownloader();
             }
         });
     }
 
-    public void release() {
+    public void releaseDownloader() {
         if (mDownloader == null) {
             return;
         }
 
         mDownloader.stop();
         mDownloader.release();
+    }
+
+    public void destroy() {
+        releaseDownloader();
+
+        if (mPlayer != null) {
+            mPlayer.release();
+        }
     }
 }

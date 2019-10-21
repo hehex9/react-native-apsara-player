@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Alert, Text} from 'react-native';
+import {StyleSheet, View, Alert, Text, Switch} from 'react-native';
 import Slider from '@react-native-community/slider';
 import ApsaraPlayer from 'react-native-apsara-player';
 import Button from './button';
@@ -15,7 +15,18 @@ export default class App extends Component {
     paused: true,
     duration: 20,
     currentTime: 0,
+    enable: true,
   };
+
+  init(props) {
+    this.setState({
+      paused: true,
+      duration: 0,
+      currentTime: 0,
+      enable: true,
+      ...props,
+    });
+  }
 
   start = () => {
     this.setState({paused: false});
@@ -72,9 +83,9 @@ export default class App extends Component {
     this.setState({currentTime: data.currentTime});
   };
 
-  render() {
+  renderVideo() {
     return (
-      <View style={styles.container}>
+      <>
         <ApsaraPlayer
           ref={player => (this._player = player)}
           style={styles.player}
@@ -109,6 +120,22 @@ export default class App extends Component {
             <Button title="下载" onPress={this.save} style={styles.button} />
           )}
         </View>
+      </>
+    );
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Switch
+          style={styles.switch}
+          value={this.state.enable}
+          onValueChange={enable => {
+            this.init({enable});
+          }}
+        />
+
+        {this.state.enable && this.renderVideo()}
       </View>
     );
   }
@@ -120,6 +147,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+  },
+
+  switch: {
+    marginBottom: 30,
   },
 
   player: {
