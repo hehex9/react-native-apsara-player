@@ -13,7 +13,7 @@
     "@react-native-community/slider": "^2.0.2",
     "react": "16.9.0",
     "react-native": "0.61.2",
-    "react-native-apsara-player": "file:../"
+    "react-native-apsara-player": "file:.."
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",

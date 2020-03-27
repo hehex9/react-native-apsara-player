@@ -28,10 +28,12 @@ import java.util.Map;
 public class ApsaraPlayerView extends FrameLayout implements
         AliPlayer.OnInfoListener,
         AliPlayer.OnErrorListener,
+        AliPlayer.OnCompletionListener,
         AliPlayer.OnPreparedListener,
         AliPlayer.OnSeekCompleteListener {
 
     public enum Events {
+        EVENT_END("onVideoEnd"),
         EVENT_LOAD("onVideoLoad"),
         EVENT_SEEK("onVideoSeek"),
         EVENT_ERROR("onVideoError"),
@@ -93,6 +95,7 @@ public class ApsaraPlayerView extends FrameLayout implements
 
         mPlayer.prepare();
 
+        mPlayer.setOnCompletionListener(this);
         mPlayer.setOnInfoListener(this);
         mPlayer.setOnErrorListener(this);
         mPlayer.setOnPreparedListener(this);
@@ -172,6 +175,11 @@ public class ApsaraPlayerView extends FrameLayout implements
         auth.setPlayAuth(opts.get("playAuth"));
         auth.setRegion(opts.containsKey("region") ? opts.get("region") : "");
         return auth;
+    }
+
+    @Override
+    public void onCompletion() {
+        mEventEmitter.receiveEvent(getId(), Events.EVENT_END.toString(), null);
     }
 
     @Override
