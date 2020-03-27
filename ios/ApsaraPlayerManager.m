@@ -25,6 +25,7 @@ RCT_EXPORT_VIEW_PROPERTY(source, NSDictionary)
 
 RCT_EXPORT_VIEW_PROPERTY(onVideoLoad, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onVideoSeek, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onVideoEnd, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onVideoError, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onVideoProgress, RCTDirectEventBlock)
 

@@ -131,6 +131,11 @@
           @"currentTime": [NSNumber numberWithFloat:_player.currentPosition]});
       }
       break;
+    case AVPEventCompletion:
+      if (self.onVideoEnd) {
+        self.onVideoEnd();
+      }
+      break;
     // case ...
     default:
       break;

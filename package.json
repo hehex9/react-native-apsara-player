@@ -4,9 +4,6 @@
   "version": "0.2.1",
   "description": "A React Native wrapper around AliyunVideo SDK",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hehex9/react-native-apsara-player.git",
@@ -27,9 +24,5 @@
   "peerDependencies": {
     "react": "^16.8.1",
     "react-native": ">=0.59.0-rc.0 <1.0.x"
-  },
-  "devDependencies": {
-    "react": "^16.8.3",
-    "react-native": "^0.61.2"
   }
 }

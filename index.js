@@ -70,6 +70,7 @@ export default class ApsaraPlayer extends React.Component {
           source={this.props.source}
           options={this.props.options}
           paused={this.props.paused}
+          onVideoEnd={this.props.onEnd}
           onVideoLoad={this._onLoad}
           onVideoSeek={this._onSeek}
           onVideoError={this._onError}
@@ -100,6 +101,7 @@ ApsaraPlayer.propTypes = {
       playAuth: PropTypes.string,
     }),
   }),
+  onEnd: PropTypes.func,
   onLoad: PropTypes.func,
   onSeek: PropTypes.func,
   onError: PropTypes.func,

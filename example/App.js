@@ -79,6 +79,10 @@ export default class App extends Component {
     Alert.alert('ERROR', data.message);
   };
 
+  _onEnd = () => {
+    Alert.alert('播放完毕');
+  };
+
   _onProgress = data => {
     this.setState({currentTime: data.currentTime});
   };
@@ -91,6 +95,7 @@ export default class App extends Component {
           style={styles.player}
           source={source}
           paused={this.state.paused}
+          onEnd={this._onEnd}
           onLoad={this._onLoad}
           onError={this._onError}
           onSeek={this._onSeekEnd}
@@ -112,7 +117,7 @@ export default class App extends Component {
 
         <View style={styles.buttons}>
           <Button
-            title={this.state.paused ? '播放' : '暂停'}
+            title={this.state.paused ? '点击播放' : '点击暂停'}
             onPress={this.state.paused ? this.start : this.stop}
           />
 
@@ -127,13 +132,16 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Switch
-          style={styles.switch}
-          value={this.state.enable}
-          onValueChange={enable => {
-            this.init({enable});
-          }}
-        />
+        <View style={styles.switchWrap}>
+          <Text>是否显示视频</Text>
+          <Switch
+            style={styles.switch}
+            value={this.state.enable}
+            onValueChange={enable => {
+              this.init({enable});
+            }}
+          />
+        </View>
 
         {this.state.enable && this.renderVideo()}
       </View>
@@ -149,8 +157,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
 
+  switchWrap: {
+    position: 'absolute',
+    top: 60,
+    left: 0,
+    right: 0,
+    paddingLeft: 16,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
   switch: {
-    marginBottom: 30,
+    marginLeft: 8,
   },
 
   player: {

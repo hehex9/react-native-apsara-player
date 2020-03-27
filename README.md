@@ -1,7 +1,7 @@
 ## react-native-apsara-player
 A react-native wrapper around [aliyun video player](https://help.aliyun.com/document_detail/125579.html)
 
-Check the `example` for more details
+Check the [example](example) for more details
 
 
 ### Installation
@@ -84,12 +84,13 @@ export default class extends React.Component {
         ref={ref => {
           this.player = ref
         })
-        source={uriSource}
+        source={uriSource /* or stsSource or authSource */}
         paused={true}
+        onEnd={this._onEnd}
         onLoad={this._onLoad}
         onSeek={this._onSeek}
         onError={this._onError}
-        onProgress={}
+        onProgress={this._onProgress}
       />
     )
   }
@@ -104,7 +105,11 @@ export default class extends React.Component {
 | muted | false | Boolean | Whether the audio is muted |
 | volume | 1 | Boolean | Adjust the volume |
 | source | none | Object | Source of the video |
+| onEnd | none | Function | Callback function that is called when the player reaches the end of the media |
 | onLoad | none | Function | Callback function that is called when the video is loaded |
 | onSeek | none | Function | Callback function that is called when a seek completes |
 | onError | none | Function | Function that is invoked when the video load fails |
 | onProgress | none | Function | Function that is invoked when the video is updates |
+
+### License
+MIT
