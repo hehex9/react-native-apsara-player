@@ -185,7 +185,7 @@ PODS:
     - React-cxxreact (= 0.61.2)
     - React-jsi (= 0.61.2)
   - React-jsinspector (0.61.2)
-  - react-native-apsara-player (0.2.2):
+  - react-native-apsara-player (0.2.4):
     - AliPlayerSDK_iOS
     - React
   - react-native-slider (2.0.2):
@@ -338,7 +338,7 @@ SPEC CHECKSUMS:
   React-jsi: 32285a21b1b24c36060493ed3057a34677d58d09
   React-jsiexecutor: 8909917ff7d8f21a57e443a866fd8d4560e50c65
   React-jsinspector: 111d7d342b07a904c400592e02a2b958f1098b60
-  react-native-apsara-player: b00ffbe20b854ba5de6246c856298b4e9db8f112
+  react-native-apsara-player: a368ab85ce70585da153d89cdc37d0a0cc0529de
   react-native-slider: 5d61590f26a51cf0a858bfd1543f6d6ec8b78a6e
   React-RCTActionSheet: 89b037c0fb7d2671607cb645760164e7e0c013f6
   React-RCTAnimation: e3cefa93c38c004c318f7ec04b883eb14b8b8235
