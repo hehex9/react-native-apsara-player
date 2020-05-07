@@ -133,7 +133,7 @@
       break;
     case AVPEventCompletion:
       if (self.onVideoEnd) {
-        self.onVideoEnd();
+        self.onVideoEnd(@{});
       }
       break;
     // case ...
