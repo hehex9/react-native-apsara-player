@@ -70,6 +70,8 @@ export default class ApsaraPlayer extends React.Component {
           source={this.props.source}
           options={this.props.options}
           paused={this.props.paused}
+          volume={this.props.volume}
+          muted={this.props.muted}
           onVideoEnd={this.props.onEnd}
           onVideoLoad={this._onLoad}
           onVideoSeek={this._onSeek}
@@ -79,6 +81,13 @@ export default class ApsaraPlayer extends React.Component {
       </View>
     );
   }
+}
+
+ApsaraPlayer.defaultProps = {
+  volume: 1,
+  muted: false,
+  paused: false,
+  repeat: false,
 }
 
 ApsaraPlayer.propTypes = {

@@ -16,6 +16,8 @@ export default class App extends Component {
     duration: 20,
     currentTime: 0,
     enable: true,
+    volume: 1,
+    muted: false,
   };
 
   init(props) {
@@ -63,6 +65,10 @@ export default class App extends Component {
     );
   };
 
+  _setVolume = v => {
+    this.setState({volume: v});
+  };
+
   _onSeek = pos => {
     this._player.seek(pos);
   };
@@ -95,6 +101,8 @@ export default class App extends Component {
           style={styles.player}
           source={source}
           paused={this.state.paused}
+          muted={this.state.muted}
+          volume={this.state.volume}
           onEnd={this._onEnd}
           onLoad={this._onLoad}
           onError={this._onError}
@@ -114,6 +122,25 @@ export default class App extends Component {
           maximumValue={this.state.duration}
           onValueChange={this._onSeek}
         />
+
+        <Text>音量</Text>
+        <Slider
+          style={styles.slider}
+          value={this.state.volume}
+          minimumValue={0}
+          maximumValue={1}
+          onValueChange={this._setVolume}
+        />
+
+        <View style={styles.mutedWrap}>
+          <Text style={styles.mutedText}>静音</Text>
+          <Switch
+            value={this.state.muted}
+            onValueChange={muted => {
+              this.setState({muted});
+            }}
+          />
+        </View>
 
         <View style={styles.buttons}>
           <Button
@@ -182,7 +209,7 @@ const styles = StyleSheet.create({
   slider: {
     width: '90%',
     height: 12,
-    marginTop: 30,
+    marginTop: 12,
     marginBottom: 30,
   },
 
@@ -195,5 +222,16 @@ const styles = StyleSheet.create({
 
   button: {
     marginLeft: 12,
+  },
+
+  mutedWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+
+  mutedText: {
+    marginRight: 12,
   },
 });
