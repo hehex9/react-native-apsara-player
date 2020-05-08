@@ -103,7 +103,7 @@ export default class extends React.Component {
 | paused | false | Boolean | Whether the video is paused |
 | repeat | false | Boolean | Whether to repeat the video |
 | muted | false | Boolean | Whether the audio is muted |
-| volume | 1 | Boolean | Adjust the volume |
+| volume | 1 | Number | Adjust the volume |
 | source | none | Object | Source of the video |
 | onEnd | none | Function | Callback function that is called when the player reaches the end of the media |
 | onLoad | none | Function | Callback function that is called when the video is loaded |
