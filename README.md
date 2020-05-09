@@ -64,17 +64,21 @@ import ApsaraPlayer from 'react-native-apsara-player';
 const uriSource = { uri: "https://player.alicdn.com/video/aliyunmedia.mp4" }
 
 const stsSource = {
-  vid: 'YOUR_VID'
-  region: 'YOUR_REGION',
-  accessKeyId: 'YOUR_ACCESS_KEY_ID',
-  accessKeySecret: 'YOUR_ACCESS_KEY_SECRET',
-  securityToken: 'YOUR_SECURITY_TOKEN',
+  sts: {
+    vid: 'YOUR_VID'
+    region: 'YOUR_REGION',
+    accessKeyId: 'YOUR_ACCESS_KEY_ID',
+    accessKeySecret: 'YOUR_ACCESS_KEY_SECRET',
+    securityToken: 'YOUR_SECURITY_TOKEN',
+  },
 }
 
 const authSource = {
-  vid: 'YOUR_VID'
-  region: 'YOUR_REGION',
-  playAuth: 'YOUR_PLAY_AUTH',
+  auth: {
+    vid: 'YOUR_VID'
+    region: 'YOUR_REGION',
+    playAuth: 'YOUR_PLAY_AUTH',
+  },
 }
 
 export default class extends React.Component {

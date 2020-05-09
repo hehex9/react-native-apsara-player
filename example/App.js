@@ -82,6 +82,7 @@ export default class App extends Component {
   };
 
   _onError = data => {
+    console.warn(data);
     Alert.alert('ERROR', data.message);
   };
 
