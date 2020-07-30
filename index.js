@@ -68,7 +68,6 @@ export default class ApsaraPlayer extends React.Component {
           }}
           style={StyleSheet.absoluteFill}
           source={this.props.source}
-          options={this.props.options}
           paused={this.props.paused}
           volume={this.props.volume}
           muted={this.props.muted}
