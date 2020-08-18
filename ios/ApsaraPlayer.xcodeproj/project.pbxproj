@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6C605CED24EBB52D00F11917 /* ApsaraPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C605CEC24EBB52D00F11917 /* ApsaraPlayerManager.m */; };
 		6CCE2C872353B9FA009405C7 /* ApsaraPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCE2C862353B9FA009405C7 /* ApsaraPlayerView.m */; };
-		B3E7B58A1CC2AC0600A0062D /* ApsaraPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* ApsaraPlayer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,10 +25,10 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libApsaraPlayer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libApsaraPlayer.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C605CEB24EBB52D00F11917 /* ApsaraPlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApsaraPlayerManager.h; sourceTree = "<group>"; };
+		6C605CEC24EBB52D00F11917 /* ApsaraPlayerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApsaraPlayerManager.m; sourceTree = "<group>"; };
 		6CCE2C852353B9EA009405C7 /* ApsaraPlayerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApsaraPlayerView.h; sourceTree = "<group>"; };
 		6CCE2C862353B9FA009405C7 /* ApsaraPlayerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApsaraPlayerView.m; sourceTree = "<group>"; };
-		B3E7B5881CC2AC0600A0062D /* ApsaraPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApsaraPlayer.h; sourceTree = "<group>"; };
-		B3E7B5891CC2AC0600A0062D /* ApsaraPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApsaraPlayer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,8 +55,8 @@
 			children = (
 				6CCE2C862353B9FA009405C7 /* ApsaraPlayerView.m */,
 				6CCE2C852353B9EA009405C7 /* ApsaraPlayerView.h */,
-				B3E7B5881CC2AC0600A0062D /* ApsaraPlayer.h */,
-				B3E7B5891CC2AC0600A0062D /* ApsaraPlayer.m */,
+				6C605CEB24EBB52D00F11917 /* ApsaraPlayerManager.h */,
+				6C605CEC24EBB52D00F11917 /* ApsaraPlayerManager.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -118,7 +118,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3E7B58A1CC2AC0600A0062D /* ApsaraPlayer.m in Sources */,
+				6C605CED24EBB52D00F11917 /* ApsaraPlayerManager.m in Sources */,
 				6CCE2C872353B9FA009405C7 /* ApsaraPlayerView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
