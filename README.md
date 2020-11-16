@@ -6,55 +6,11 @@ Check the [example](example) for more details
 
 ### Installation
 
-Using npm:
-```shell
-npm install --save react-native-apsara-player
-```
-
-or yarn:
 ```shell
 yarn add --save react-native-apsara-player
+
+npx pod-install
 ```
-
-<details>
-  <summary>Standard Method</summary>
-
-**React Native 0.60 and above**
-
-Run `pod install` in the `ios` directory.
-
-**React Native 0.59 and below**
-
-Run `react-native link react-native-apsara-video` to link library.
-</details>
-
-<details>
-  <summary>Manually Method</summary>
-
-#### iOS
-[https://facebook.github.io/react-native/docs/linking-libraries-ios](https://facebook.github.io/react-native/docs/linking-libraries-ios)
-
-#### Android
-
-**android/settings.gradle**
-```gradle
-include ':react-native-apsara-player'
-project(':react-native-apsara-player').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-apsara-player/android')
-```
-
-**MainApplication.java**
-
-```java
-@Override
-protected List<ReactPackage> getPackages() {
-    return Arrays.asList(
-            new MainReactPackage(),
-            new ApsaraPlayerPackage()
-    );
-}
-```
-</details>
-
 
 ### Usage example
 ```javascript
@@ -114,6 +70,10 @@ export default class extends React.Component {
 | onSeek | none | Function | Callback function that is called when a seek completes |
 | onError | none | Function | Function that is invoked when the video load fails |
 | onProgress | none | Function | Function that is invoked when the video is updates |
+
+### Requirements
+
+- react-native > 0.60.0
 
 ### License
 MIT
