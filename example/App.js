@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
-import {StyleSheet, View, Alert, Text, Switch} from 'react-native';
-import Slider from '@react-native-community/slider';
-import ApsaraPlayer from 'react-native-apsara-player';
-import Button from './button';
+import React, {Component} from 'react'
+import {StyleSheet, View, Alert, Text, Switch} from 'react-native'
+import Slider from '@react-native-community/slider'
+import ApsaraPlayer from 'react-native-apsara-player'
+import Button from './button'
 
 const source = {
   auth: null,
   sts: null,
   uri: 'https://player.alicdn.com/video/aliyunmedia.mp4',
-};
+}
 
 export default class App extends Component {
   state = {
@@ -18,7 +18,7 @@ export default class App extends Component {
     enable: true,
     volume: 1,
     muted: false,
-  };
+  }
 
   init(props) {
     this.setState({
@@ -27,16 +27,16 @@ export default class App extends Component {
       currentTime: 0,
       enable: true,
       ...props,
-    });
+    })
   }
 
   start = () => {
-    this.setState({paused: false});
-  };
+    this.setState({paused: false})
+  }
 
   stop = () => {
-    this.setState({paused: true});
-  };
+    this.setState({paused: true})
+  }
 
   save = () => {
     Alert.alert(
@@ -52,53 +52,53 @@ export default class App extends Component {
           onPress: () => {
             this._player
               .save()
-              .then(rs => {
-                Alert.alert('下载完成', rs.uri);
+              .then((rs) => {
+                Alert.alert('下载完成', rs.uri)
               })
-              .catch(e => {
-                console.warn(e);
-              });
+              .catch((e) => {
+                console.warn(e)
+              })
           },
         },
       ],
       {cancelable: false},
-    );
-  };
+    )
+  }
 
-  _setVolume = v => {
-    this.setState({volume: v});
-  };
+  _setVolume = (v) => {
+    this.setState({volume: v})
+  }
 
-  _onSeek = pos => {
-    this._player.seek(pos);
-  };
+  _onSeek = (pos) => {
+    this._player.seek(pos)
+  }
 
   _onSeekEnd = () => {
-    console.log('onSeek completed');
-  };
+    console.log('onSeek completed')
+  }
 
-  _onLoad = data => {
-    this.setState({duration: data.duration});
-  };
+  _onLoad = (data) => {
+    this.setState({duration: data.duration})
+  }
 
-  _onError = data => {
-    console.warn(data);
-    Alert.alert('ERROR', data.message);
-  };
+  _onError = (data) => {
+    console.warn(data)
+    Alert.alert('ERROR', data.message)
+  }
 
   _onEnd = () => {
-    Alert.alert('播放完毕');
-  };
+    Alert.alert('播放完毕')
+  }
 
-  _onProgress = data => {
-    this.setState({currentTime: data.currentTime});
-  };
+  _onProgress = (data) => {
+    this.setState({currentTime: data.currentTime})
+  }
 
   renderVideo() {
     return (
       <>
         <ApsaraPlayer
-          ref={player => (this._player = player)}
+          ref={(player) => (this._player = player)}
           style={styles.player}
           source={source}
           paused={this.state.paused}
@@ -137,8 +137,8 @@ export default class App extends Component {
           <Text style={styles.mutedText}>静音</Text>
           <Switch
             value={this.state.muted}
-            onValueChange={muted => {
-              this.setState({muted});
+            onValueChange={(muted) => {
+              this.setState({muted})
             }}
           />
         </View>
@@ -154,7 +154,7 @@ export default class App extends Component {
           )}
         </View>
       </>
-    );
+    )
   }
 
   render() {
@@ -165,15 +165,15 @@ export default class App extends Component {
           <Switch
             style={styles.switch}
             value={this.state.enable}
-            onValueChange={enable => {
-              this.init({enable});
+            onValueChange={(enable) => {
+              this.init({enable})
             }}
           />
         </View>
 
         {this.state.enable && this.renderVideo()}
       </View>
-    );
+    )
   }
 }
 
@@ -235,4 +235,4 @@ const styles = StyleSheet.create({
   mutedText: {
     marginRight: 12,
   },
-});
+})

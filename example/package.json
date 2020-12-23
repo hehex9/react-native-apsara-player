@@ -6,20 +6,33 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "lint": "eslint .",
-    "postinstall": "rm -rf node_modules/react-native-apsara-player/{example,node_modules}"
+    "lint": "eslint ."
   },
   "dependencies": {
-    "@react-native-community/slider": "^2.0.2",
-    "react": "16.9.0",
-    "react-native": "0.61.2",
-    "react-native-apsara-player": "file:.."
+    "@react-native-community/slider": "^3.0.3",
+    "react": "16.13.1",
+    "react-native": "0.63.4",
+    "react-native-apsara-player": "file:.yalc/react-native-apsara-player"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.4",
-    "@babel/runtime": "^7.6.3",
-    "@react-native-community/eslint-config": "^0.0.5",
-    "eslint": "^6.5.1",
-    "metro-react-native-babel-preset": "^0.56.0"
+    "@babel/core": "7.12.10",
+    "@babel/runtime": "7.12.5",
+    "@react-native-community/eslint-config": "2.0.0",
+    "eslint": "7.16.0",
+    "metro-react-native-babel-preset": "0.64.0"
+  },
+  "prettier": {
+    "semi": false,
+    "bracketSpacing": false,
+    "jsxBracketSameLine": true,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": "@react-native-community",
+    "rules": {
+      "semi": "off"
+    }
   }
 }

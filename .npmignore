@@ -8,3 +8,4 @@ ios/ApsaraPlayer.xcodeproj/project.xcworkspace/xcuserdata/
 android/build
 local.properties
 *.iml
+yalc*

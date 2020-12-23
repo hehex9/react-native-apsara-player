@@ -7,8 +7,7 @@ Check the [example](example) for more details
 ### Installation
 
 ```shell
-yarn add --save react-native-apsara-player
-
+yarn add react-native-apsara-player
 npx pod-install
 ```
 
@@ -73,7 +72,7 @@ export default class extends React.Component {
 
 ### Requirements
 
-- react-native > 0.60.0
+- react-native >= 0.60.0
 
 ### License
 MIT
