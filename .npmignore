@@ -1,11 +1,12 @@
 example
 .gitattributes
-ios/ApsaraPlayer.xcworkspace/xcuserdata/
+ios/ApsaraPlayer.xcworkspace/
 ios/ApsaraPlayer.xcodeproj/xcuserdata/
-ios/ApsaraPlayer.xcodeproj/project.xcworkspace/xcuserdata/
+ios/ApsaraPlayer.xcodeproj/project.xcworkspace/
 .idea
 .gradle
 android/build
 local.properties
 *.iml
 yalc*
+.github

@@ -1,7 +1,7 @@
 {
   "name": "react-native-apsara-player",
   "title": "A React Native wrapper around AliyunVideo SDK",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A React Native wrapper around AliyunVideo SDK",
   "main": "index.js",
   "repository": {
